@@ -5,9 +5,9 @@ Class {
 		'token',
 		'labeledToken',
 		'submitButton',
-		'modelBuilder',
 		'labeledChallengeIdentifier',
-		'challengeIdentifier'
+		'challengeIdentifier',
+		'requestBuilder'
 	],
 	#category : #'Hornero-View'
 }
@@ -34,7 +34,7 @@ ChallengeSelectionFormPresenter >> connectPresenters [
 { #category : #initialization }
 ChallengeSelectionFormPresenter >> initialize [
 
-	modelBuilder := StartChallengeRequestBuilder new.
+	requestBuilder := StartChallengeRequestBuilder new.
 	super initialize
 ]
 
@@ -53,18 +53,31 @@ ChallengeSelectionFormPresenter >> initializePresenters [
 	labeledChallengeIdentifier := self
 		instantiate: ( SpLabelledPresenter label: 'Desafío Nº' input: challengeIdentifier ).
 
-	submitButton := self newButton label: 'Comenzar'
+	submitButton := self newButton label: 'Comenzar'.
+
+	self focusOrder
+		add: token;
+		add: challengeIdentifier;
+		add: submitButton
 ]
 
 { #category : #submiting }
 ChallengeSelectionFormPresenter >> submit [
 
-	modelBuilder
+	requestBuilder
 		token: token text;
 		challenge: challengeIdentifier number;
 		yourself.
 
-	[ self setAnnouncingObject: modelBuilder build ]
+	[ | request response |
+
+	request := requestBuilder build.
+	response := request apply.
+	self model: response.
+	submitButton
+		icon: ( self iconNamed: #thumbsUp );
+		label: nil
+	]
 		on: AssertionFailure
 		do: [ :signal | signal halt ]
 ]
