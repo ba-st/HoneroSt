@@ -20,11 +20,7 @@ CodingContestEvaluatorPresenter class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
 		add: #form
-			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight * 3.5 ];
-		add: #labelledChallengeName
-			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight ];
-		add: #labelledArguments
-			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight ];
+			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight * 2 ];
 		add: #code withConstraints: [ :c | c fill: true ];
 		addLast: #actionBar
 			expand: false
@@ -47,27 +43,9 @@ CodingContestEvaluatorPresenter class >> menuCommandOn: aBuilder [
 ]
 
 { #category : #accessing }
-CodingContestEvaluatorPresenter >> argumentos [
+CodingContestEvaluatorPresenter >> arguments [
 
-	^ form model arguments substrings: ','
-]
-
-{ #category : #initialization }
-CodingContestEvaluatorPresenter >> argumentsLabel [
-
-	^ 'Parametros:'
-]
-
-{ #category : #initialization }
-CodingContestEvaluatorPresenter >> challengeNameLabel [
-
-	^ 'Desafio:'
-]
-
-{ #category : #updating }
-CodingContestEvaluatorPresenter >> informSubmition [
-
-	self updateInformativeLabelsWith: form model
+	^ self startedChallenge arguments substrings: ','
 ]
 
 { #category : #initialization }
@@ -80,12 +58,16 @@ CodingContestEvaluatorPresenter >> initializePresenters [
 				label: 'Enviar';
 				icon: ( self iconNamed: #smallOk );
 				help: 'Evaluar y enviar la respuesta al server';
-				action: [ self submitSolution ];
+				action: [ self submit ];
 				yourself );
 		yourself.
-	labelledChallengeName := self newLabel label: self challengeNameLabel.
-	labelledArguments := self newLabel label: self argumentsLabel.
-	code := self newCode autoAccept: true; doItContext:  self
+
+	code := self newCode autoAccept: true.
+	
+	self focusOrder
+		add: form;
+		add: code;
+		add: actionBar
 ]
 
 { #category : #initialization }
@@ -94,7 +76,13 @@ CodingContestEvaluatorPresenter >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: 'Hornero';
-		initialExtent: 400 @ 700
+		initialExtent: 400 @ 500
+]
+
+{ #category : #submitting }
+CodingContestEvaluatorPresenter >> requestChallenge [
+
+	form submit
 ]
 
 { #category : #accessing }
@@ -104,11 +92,22 @@ CodingContestEvaluatorPresenter >> startedChallenge [
 ]
 
 { #category : #submitting }
+CodingContestEvaluatorPresenter >> submit [
+
+	self
+		requestChallenge;
+		submitSolution
+]
+
+{ #category : #submitting }
 CodingContestEvaluatorPresenter >> submitSolution [
 
 	| solution submitionResponse |
 
-	solution := Smalltalk compiler source: code text; receiver: self; evaluate.
+	solution := Smalltalk compiler
+		source: code text;
+		receiver: self;
+		evaluate.
 
 	submitionResponse := ( SubmitChallengeSolutionRequest
 		submitting: solution
@@ -119,13 +118,4 @@ CodingContestEvaluatorPresenter >> submitSolution [
 			( submitionResponse
 				at: 'mensaje'
 				ifAbsent: [ submitionResponse at: 'error' ifAbsent: [ self halt ] ] )
-]
-
-{ #category : #updating }
-CodingContestEvaluatorPresenter >> updateInformativeLabelsWith: aChallengeStarted [
-
-	labelledChallengeName
-		label: ( '<1s> <2s>' expandMacrosWith: self challengeNameLabel with: aChallengeStarted challengeName ).
-	labelledArguments
-		label: ( '<1s> <2s>' expandMacrosWith: self argumentsLabel with: aChallengeStarted arguments )
 ]

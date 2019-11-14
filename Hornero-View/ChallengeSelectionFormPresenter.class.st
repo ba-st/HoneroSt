@@ -3,7 +3,6 @@ Class {
 	#superclass : #SpPresenterWithModel,
 	#instVars : [
 		'token',
-		'submitButton',
 		'challengeIdentifier',
 		'labelledToken',
 		'labelledChallengeIdentifier'
@@ -19,15 +18,7 @@ ChallengeSelectionFormPresenter class >> defaultSpec [
 			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight ];
 		add: #labelledChallengeIdentifier
 			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight ];
-		add: #submitButton
-			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight ];
 		yourself
-]
-
-{ #category : #initialization }
-ChallengeSelectionFormPresenter >> connectPresenters [
-
-	submitButton action: [ self submit ]
 ]
 
 { #category : #initialization }
@@ -45,12 +36,9 @@ ChallengeSelectionFormPresenter >> initializePresenters [
 	labelledChallengeIdentifier := self
 		instantiate: ( SpLabelledPresenter label: 'Desafío Nº' input: challengeIdentifier ).
 
-	submitButton := self newButton label: 'Comenzar'.
-
 	self focusOrder
 		add: token;
-		add: challengeIdentifier;
-		add: submitButton
+		add: challengeIdentifier
 ]
 
 { #category : #submiting }
@@ -60,11 +48,7 @@ ChallengeSelectionFormPresenter >> submit [
 
 	request := StartChallengeRequest starting: challengeIdentifier number for: token text.
 	response := request apply.
-	self model: response.
-	owner informSubmition.
-	submitButton
-		icon: ( self iconNamed: #thumbsUp );
-		label: nil
+	self model: response
 	]
 		on: AssertionFailure
 		do: [ :signal | signal halt ]
