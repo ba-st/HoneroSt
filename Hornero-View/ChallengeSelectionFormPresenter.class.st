@@ -22,7 +22,15 @@ ChallengeSelectionFormPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-ChallengeSelectionFormPresenter >> initializePresenters [
+ChallengeSelectionFormPresenter >> initializeLabelledChallengeIdentifierInput [
+
+	challengeIdentifier := self newNumberInput autoAccept: true.
+	labelledChallengeIdentifier := self
+		instantiate: ( SpLabelledPresenter label: 'Desafío Nº' input: challengeIdentifier )
+]
+
+{ #category : #initialization }
+ChallengeSelectionFormPresenter >> initializeLabelledTokenInput [
 
 	token := self newTextInput autoAccept: true.
 	labelledToken := self
@@ -30,11 +38,14 @@ ChallengeSelectionFormPresenter >> initializePresenters [
 			( SpLabelledPresenter
 				label: 'Token'
 				input: token
-				description: 'Copiar el token que te identifica en la plataforma.' ).
+				description: 'Copiar el token que te identifica en la plataforma.' )
+]
 
-	challengeIdentifier := self newNumberInput autoAccept: true.
-	labelledChallengeIdentifier := self
-		instantiate: ( SpLabelledPresenter label: 'Desafío Nº' input: challengeIdentifier ).
+{ #category : #initialization }
+ChallengeSelectionFormPresenter >> initializePresenters [
+
+	self initializeLabelledTokenInput.
+	self initializeLabelledChallengeIdentifierInput.
 
 	self focusOrder
 		add: token;
@@ -44,12 +55,8 @@ ChallengeSelectionFormPresenter >> initializePresenters [
 { #category : #submiting }
 ChallengeSelectionFormPresenter >> submit [
 
-	[ | request response |
+	| request |
 
 	request := StartChallengeRequest starting: challengeIdentifier number for: token text.
-	response := request apply.
-	self model: response
-	]
-		on: AssertionFailure
-		do: [ :signal | signal halt ]
+	self model: request apply
 ]

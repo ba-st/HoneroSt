@@ -48,7 +48,13 @@ CodingContestEvaluatorPresenter class >> menuCommandOn: aBuilder [
 { #category : #accessing }
 CodingContestEvaluatorPresenter >> arguments [
 
-	^ self startedChallenge arguments substrings: ','
+	^ self challengeSession arguments substrings: ','
+]
+
+{ #category : #accessing }
+CodingContestEvaluatorPresenter >> challengeSession [
+
+	^ form model
 ]
 
 { #category : #initialization }
@@ -90,12 +96,6 @@ CodingContestEvaluatorPresenter >> requestChallenge [
 	form submit
 ]
 
-{ #category : #accessing }
-CodingContestEvaluatorPresenter >> startedChallenge [
-
-	^ form model
-]
-
 { #category : #submitting }
 CodingContestEvaluatorPresenter >> submit [
 
@@ -116,7 +116,7 @@ CodingContestEvaluatorPresenter >> submitSolution [
 
 	submitionResponse := ( SubmitChallengeSolutionRequest
 		submitting: solution
-		for: self startedChallenge ) apply.
+		for: self challengeSession ) apply.
 
 	self
 		inform:

@@ -23,7 +23,7 @@ StartChallengeRequest >> apply [
 		expandMacrosWith: token
 		with: challenge.
 
-	^ StartedChallenge fromString: ( ZnClient new get: location )
+	^ ChallengeSession fromString: ( ZnClient new get: location )
 ]
 
 { #category : #initialization }
