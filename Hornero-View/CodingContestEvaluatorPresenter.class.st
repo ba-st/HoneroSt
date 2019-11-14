@@ -11,7 +11,7 @@ Class {
 		'form',
 		'labelledChallengeName',
 		'labelledArguments',
-		'solutionResponse'
+		'submitionResponse'
 	],
 	#category : #'Hornero-View'
 }
@@ -62,8 +62,12 @@ CodingContestEvaluatorPresenter >> initializePresenters [
 				label: 'Enviar';
 				icon: ( self iconNamed: #smallOk );
 				help: 'Evaluar y enviar la respuesta al server';
-				action: [ self inform: 'Enviado'.
-					self submitSolution
+				action: [ self submitSolution.
+					self
+						inform:
+							( submitionResponse
+								at: 'mensaje'
+								ifAbsent: [ submitionResponse at: 'error' ifAbsent: [ self halt ] ] )
 					];
 				yourself );
 		yourself.
@@ -88,7 +92,7 @@ CodingContestEvaluatorPresenter >> submitSolution [
 
 	solution := Smalltalk compiler evaluate: code text.
 
-	solutionResponse := STONJSON
+	submitionResponse := STONJSON
 		fromString:
 			( ZnClient new
 				get:
