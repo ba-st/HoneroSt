@@ -14,6 +14,7 @@ Class {
 
 { #category : #specs }
 ChallengeSelectionFormPresenter class >> defaultSpec [
+
 	^ SpBoxLayout newVertical
 		add: #labelledToken
 			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight ];

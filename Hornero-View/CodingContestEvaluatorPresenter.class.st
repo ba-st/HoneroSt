@@ -34,6 +34,19 @@ CodingContestEvaluatorPresenter class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #specs }
+CodingContestEvaluatorPresenter class >> menuCommandOn: aBuilder [
+
+	<worldMenu>
+	( aBuilder item: #Hornero )
+		parent: #Tools;
+		action: [ self new openWithSpec ];
+		order: 20;
+		help: 'Open Hornero';
+		icon: self taskbarIcon.
+	aBuilder withSeparatorAfter
+]
+
 { #category : #initialization }
 CodingContestEvaluatorPresenter >> argumentsLabel [
 
@@ -46,7 +59,7 @@ CodingContestEvaluatorPresenter >> challengeNameLabel [
 	^ 'Desafio:'
 ]
 
-{ #category : #Updating }
+{ #category : #updating }
 CodingContestEvaluatorPresenter >> informSubmition [
 
 	self updateInformativeLabelsWith: form model
@@ -55,7 +68,7 @@ CodingContestEvaluatorPresenter >> informSubmition [
 { #category : #initialization }
 CodingContestEvaluatorPresenter >> initializePresenters [
 
-	form := self instantiate: ChallengeSelectionFormPresenter on: 2.
+	form := self instantiate: ChallengeSelectionFormPresenter.
 	actionBar := self newActionBar
 		addLast:
 			( self newButton
@@ -85,7 +98,7 @@ CodingContestEvaluatorPresenter >> initializeWindow: aWindowPresenter [
 		initialExtent: 400 @ 700
 ]
 
-{ #category : #Submitting }
+{ #category : #submitting }
 CodingContestEvaluatorPresenter >> submitSolution [
 
 	| solution |
@@ -101,7 +114,7 @@ CodingContestEvaluatorPresenter >> submitSolution [
 						with: solution ) )
 ]
 
-{ #category : #Updating }
+{ #category : #updating }
 CodingContestEvaluatorPresenter >> updateInformativeLabelsWith: aChallengeStarted [
 
 	labelledChallengeName
