@@ -10,7 +10,8 @@ Class {
 		'labeledExerciseNumber',
 		'form',
 		'labelledChallengeName',
-		'labelledArguments'
+		'labelledArguments',
+		'extraInfoLabel'
 	],
 	#category : #'Hornero-View'
 }
@@ -21,7 +22,9 @@ CodingContestEvaluatorPresenter class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #form
 			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight * 2 ];
-		add: #code withConstraints: [ :c | c fill: true ];
+		add: #extraInfoLabel
+			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight / 2 ];
+		add: #code withConstraints: [ :constraints | constraints fill: true ];
 		addLast: #actionBar
 			expand: false
 			fill: false
@@ -52,6 +55,8 @@ CodingContestEvaluatorPresenter >> arguments [
 CodingContestEvaluatorPresenter >> initializePresenters [
 
 	form := self instantiate: ChallengeSelectionFormPresenter.
+	extraInfoLabel := self newLabel
+		label: 'Para acceder a la colección de parametros evaluar: "self arguments"'.
 	actionBar := self newActionBar
 		addLast:
 			( self newButton
@@ -63,7 +68,7 @@ CodingContestEvaluatorPresenter >> initializePresenters [
 		yourself.
 
 	code := self newCode autoAccept: true.
-	
+
 	self focusOrder
 		add: form;
 		add: code;
