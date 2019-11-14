@@ -11,9 +11,16 @@ Class {
 }
 
 { #category : #'Instance-Creation' }
-StartedChallenge class >> wrapping: aSTONJSON [
+StartedChallenge class >> fromString: aString [
 
-	^ self new initializeWrapping: aSTONJSON
+	| json |
+
+	json := STONJSON fromString: aString.
+
+	^ self new
+		initializeNamed: ( json at: 'nombreProblema' )
+		with: ( json at: 'parametrosEntrada' )
+		identifyingResponseWith: ( json at: 'token' )
 ]
 
 { #category : #Accessing }
@@ -27,12 +34,11 @@ StartedChallenge >> challengeName [
 ]
 
 { #category : #Initialization }
-StartedChallenge >> initializeWrapping: aSTONJSON [
+StartedChallenge >> initializeNamed: aChallengeName with: anArgumentsCollection identifyingResponseWith: aToken [
 
-	challengeName := aSTONJSON at: 'nombreProblema'.
-	arguments := aSTONJSON at: 'parametrosEntrada'.
-	possibleSolutions := aSTONJSON at: 'opciones'.
-	token := aSTONJSON at: 'token'
+	challengeName := aChallengeName.
+	arguments := anArgumentsCollection.
+	token := aToken
 ]
 
 { #category : #Accessing }

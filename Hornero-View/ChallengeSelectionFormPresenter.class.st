@@ -5,7 +5,6 @@ Class {
 		'token',
 		'submitButton',
 		'challengeIdentifier',
-		'requestBuilder',
 		'labelledToken',
 		'labelledChallengeIdentifier'
 	],
@@ -29,13 +28,6 @@ ChallengeSelectionFormPresenter class >> defaultSpec [
 ChallengeSelectionFormPresenter >> connectPresenters [
 
 	submitButton action: [ self submit ]
-]
-
-{ #category : #initialization }
-ChallengeSelectionFormPresenter >> initialize [
-
-	requestBuilder := StartChallengeRequestBuilder new.
-	super initialize
 ]
 
 { #category : #initialization }
@@ -64,12 +56,9 @@ ChallengeSelectionFormPresenter >> initializePresenters [
 { #category : #submiting }
 ChallengeSelectionFormPresenter >> submit [
 
-	requestBuilder
-		token: token text;
-		challenge: challengeIdentifier number.
 	[ | request response |
 
-	request := requestBuilder build.
+	request := StartChallengeRequest starting: challengeIdentifier number for: token text.
 	response := request apply.
 	self model: response.
 	owner informSubmition.
