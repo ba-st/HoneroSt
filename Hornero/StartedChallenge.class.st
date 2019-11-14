@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'challengeName',
 		'arguments',
-		'possibleSolutions',
 		'token'
 	],
 	#category : #Hornero
@@ -23,13 +22,15 @@ StartedChallenge class >> fromString: aString [
 		identifyingResponseWith: ( json at: 'token' )
 ]
 
-{ #category : #Accessing }
+{ #category : #accessing }
 StartedChallenge >> arguments [
+
 	^ arguments
 ]
 
-{ #category : #Accessing }
+{ #category : #accessing }
 StartedChallenge >> challengeName [
+
 	^ challengeName
 ]
 
@@ -41,12 +42,8 @@ StartedChallenge >> initializeNamed: aChallengeName with: anArgumentsCollection 
 	token := aToken
 ]
 
-{ #category : #Accessing }
-StartedChallenge >> possibleSolutions [
-	^ possibleSolutions
-]
-
-{ #category : #Accessing }
+{ #category : #accessing }
 StartedChallenge >> token [
+
 	^ token
 ]

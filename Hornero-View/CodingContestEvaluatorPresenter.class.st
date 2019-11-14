@@ -10,8 +10,7 @@ Class {
 		'labeledExerciseNumber',
 		'form',
 		'labelledChallengeName',
-		'labelledArguments',
-		'submitionResponse'
+		'labelledArguments'
 	],
 	#category : #'Hornero-View'
 }
@@ -47,6 +46,12 @@ CodingContestEvaluatorPresenter class >> menuCommandOn: aBuilder [
 	aBuilder withSeparatorAfter
 ]
 
+{ #category : #accessing }
+CodingContestEvaluatorPresenter >> argumentos [
+
+	^ form model arguments substrings: ','
+]
+
 { #category : #initialization }
 CodingContestEvaluatorPresenter >> argumentsLabel [
 
@@ -75,18 +80,12 @@ CodingContestEvaluatorPresenter >> initializePresenters [
 				label: 'Enviar';
 				icon: ( self iconNamed: #smallOk );
 				help: 'Evaluar y enviar la respuesta al server';
-				action: [ self submitSolution.
-					self
-						inform:
-							( submitionResponse
-								at: 'mensaje'
-								ifAbsent: [ submitionResponse at: 'error' ifAbsent: [ self halt ] ] )
-					];
+				action: [ self submitSolution ];
 				yourself );
 		yourself.
 	labelledChallengeName := self newLabel label: self challengeNameLabel.
 	labelledArguments := self newLabel label: self argumentsLabel.
-	code := self newCode autoAccept: true
+	code := self newCode autoAccept: true; doItContext:  self
 ]
 
 { #category : #initialization }
@@ -98,20 +97,28 @@ CodingContestEvaluatorPresenter >> initializeWindow: aWindowPresenter [
 		initialExtent: 400 @ 700
 ]
 
+{ #category : #accessing }
+CodingContestEvaluatorPresenter >> startedChallenge [
+
+	^ form model
+]
+
 { #category : #submitting }
 CodingContestEvaluatorPresenter >> submitSolution [
 
-	| solution |
+	| solution submitionResponse |
 
-	solution := Smalltalk compiler evaluate: code text.
+	solution := Smalltalk compiler source: code text; receiver: self; evaluate.
 
-	submitionResponse := STONJSON
-		fromString:
-			( ZnClient new
-				get:
-					( 'http://hornero.fi.uncoma.edu.ar/index.php?r=juego/respuesta&tokenSolicitud=<1s>&solucion=<2p>'
-						expandMacrosWith: form model token
-						with: solution ) )
+	submitionResponse := ( SubmitChallengeSolutionRequest
+		submitting: solution
+		for: self startedChallenge ) apply.
+
+	self
+		inform:
+			( submitionResponse
+				at: 'mensaje'
+				ifAbsent: [ submitionResponse at: 'error' ifAbsent: [ self halt ] ] )
 ]
 
 { #category : #updating }
