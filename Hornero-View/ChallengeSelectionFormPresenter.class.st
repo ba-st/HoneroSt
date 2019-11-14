@@ -3,22 +3,21 @@ Class {
 	#superclass : #SpPresenterWithModel,
 	#instVars : [
 		'token',
-		'labeledToken',
 		'submitButton',
-		'labeledChallengeIdentifier',
 		'challengeIdentifier',
-		'requestBuilder'
+		'requestBuilder',
+		'labelledToken',
+		'labelledChallengeIdentifier'
 	],
 	#category : #'Hornero-View'
 }
 
 { #category : #specs }
 ChallengeSelectionFormPresenter class >> defaultSpec [
-
 	^ SpBoxLayout newVertical
-		add: #labeledToken
+		add: #labelledToken
 			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight ];
-		add: #labeledChallengeIdentifier
+		add: #labelledChallengeIdentifier
 			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight ];
 		add: #submitButton
 			withConstraints: [ :constraints | constraints height: self labelledPresenterHeight ];
@@ -42,7 +41,7 @@ ChallengeSelectionFormPresenter >> initialize [
 ChallengeSelectionFormPresenter >> initializePresenters [
 
 	token := self newTextInput autoAccept: true.
-	labeledToken := self
+	labelledToken := self
 		instantiate:
 			( SpLabelledPresenter
 				label: 'Token'
@@ -50,7 +49,7 @@ ChallengeSelectionFormPresenter >> initializePresenters [
 				description: 'Copiar el token que te identifica en la plataforma.' ).
 
 	challengeIdentifier := self newNumberInput autoAccept: true.
-	labeledChallengeIdentifier := self
+	labelledChallengeIdentifier := self
 		instantiate: ( SpLabelledPresenter label: 'Desafío Nº' input: challengeIdentifier ).
 
 	submitButton := self newButton label: 'Comenzar'.
@@ -66,14 +65,13 @@ ChallengeSelectionFormPresenter >> submit [
 
 	requestBuilder
 		token: token text;
-		challenge: challengeIdentifier number;
-		yourself.
-
+		challenge: challengeIdentifier number.
 	[ | request response |
 
 	request := requestBuilder build.
 	response := request apply.
 	self model: response.
+	owner informSubmition.
 	submitButton
 		icon: ( self iconNamed: #thumbsUp );
 		label: nil
