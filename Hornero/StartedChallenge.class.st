@@ -1,5 +1,5 @@
 Class {
-	#name : #ChallengeStarted,
+	#name : #StartedChallenge,
 	#superclass : #Object,
 	#instVars : [
 		'challengeName',
@@ -11,23 +11,23 @@ Class {
 }
 
 { #category : #'Instance-Creation' }
-ChallengeStarted class >> wrapping: aSTONJSON [
+StartedChallenge class >> wrapping: aSTONJSON [
 
 	^ self new initializeWrapping: aSTONJSON
 ]
 
 { #category : #Accessing }
-ChallengeStarted >> arguments [
+StartedChallenge >> arguments [
 	^ arguments
 ]
 
 { #category : #Accessing }
-ChallengeStarted >> challengeName [
+StartedChallenge >> challengeName [
 	^ challengeName
 ]
 
 { #category : #Initialization }
-ChallengeStarted >> initializeWrapping: aSTONJSON [
+StartedChallenge >> initializeWrapping: aSTONJSON [
 
 	challengeName := aSTONJSON at: 'nombreProblema'.
 	arguments := aSTONJSON at: 'parametrosEntrada'.
@@ -36,11 +36,11 @@ ChallengeStarted >> initializeWrapping: aSTONJSON [
 ]
 
 { #category : #Accessing }
-ChallengeStarted >> possibleSolutions [
+StartedChallenge >> possibleSolutions [
 	^ possibleSolutions
 ]
 
 { #category : #Accessing }
-ChallengeStarted >> token [
+StartedChallenge >> token [
 	^ token
 ]

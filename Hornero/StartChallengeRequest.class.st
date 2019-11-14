@@ -16,14 +16,16 @@ StartChallengeRequest class >> starting: aChallenge for: aToken [
 
 { #category : #applying }
 StartChallengeRequest >> apply [
+
 	| location response |
+
 	location := 'http://hornero.fi.uncoma.edu.ar/index.php?r=juego/solicitud&token=<1s>&problema=<2p>'
 		expandMacrosWith: token
 		with: challenge.
 
 	response := ZnClient new get: location.
 
-	^ ChallengeStarted wrapping: (STONJSON fromString: response)
+	^ StartedChallenge wrapping: ( STONJSON fromString: response )
 ]
 
 { #category : #initialization }
